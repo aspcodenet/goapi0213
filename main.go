@@ -25,12 +25,24 @@ func handleGetOneEmployee(c *gin.Context) {
 	}
 }
 
+type PageView struct {
+	Title  string
+	Rubrik string
+}
+
+func handleStartPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", &PageView{Title: "Hello World", Rubrik: data.GetAllEmployees()[0].Namn})
+	//c.String(http.StatusOK, "Hello World")
+}
+
 func main() {
 	data.Init()
 
 	router := gin.Default()
+	router.LoadHTMLGlob("templates/**")
 
 	// router - skicka vidare beroende på   på address
+	router.GET("/", handleStartPage)                      // READ
 	router.GET("/api/employee", handleGetAllEmployees)    // READ
 	router.GET("/api/employee/:id", handleGetOneEmployee) // READ
 	// UPDATE, DELETE, CREATE - dom går inte att testa/anropa via en webbläsare

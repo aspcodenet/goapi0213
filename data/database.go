@@ -1,27 +1,52 @@
 package data
 
-var employees []Employee // på tisdag gör om till databas  (SQLite + MySQL )
+import (
+	"errors"
+
+	"github.com/glebarez/sqlite"
+	"gorm.io/gorm"
+)
+
+var db *gorm.DB
 
 func GetAllEmployees() []Employee {
+	// HÄMTA ALLA  EMPLOYEES FRÅN EN DATABAS
+	// SELECT * FROM EMPLOYEES
+	// DATA FRÅN DATABASEN -> MAPPAS OM TILL OBJEKT (struktar)
+	// relationsdatabas data där mappas till GO-objekt
+	// ORM - Object Relational Mapping
+	// ORM kpdbibliotek som för just ORM
+	// Ef Core (Entity Framework) C# , JPA Java, Sequalize Node.js
+	// GORM - ORM för GO
+	var employees []Employee
+	db.Find(&employees) // det som Find - SELECT * FROM Employees
 	return employees
 }
 
-func CreateNewEmployee(newEmployee Employee) {
-	employees = append(employees, newEmployee)
-}
+// func CreateNewEmployee(newEmployee Employee) {
+// 	employees = append(employees, newEmployee)
+// }
 
-func GetEmployee(id int) *Employee {
-	for _, employee := range employees {
-		if employee.Id == id {
-			return &employee
-		}
+func GetEmployee(id int) *Employee { // GetEpmployee(2)
+	var employee Employee
+	err := db.First(&employee, id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) { // INTE HITTAT
+		return nil
 	}
-	return nil
+	return &employee
 }
 
 func Init() {
+	db, _ = gorm.Open(sqlite.Open("employees.sqlite"), &gorm.Config{})
+	db.AutoMigrate(&Employee{}) // Finns det en tabell i databasen som heter Employee? Om inte skapa den
+	// Om det finns kolumner som inte matchar - SYNKA dom
+	// Code first
+	var antal int64
+	db.Model(&Employee{}).Count(&antal) // Seed
+	if antal == 0 {
+		db.Create(&Employee{Age: 50, Namn: "Stefan", City: "Test"}) // INSERT INTO EMPLOYEES (AGE, NAMN, CITY) VALUES (50, "Stefan", "Test")
+		db.Create(&Employee{Age: 14, Namn: "Oliver", City: "Test"})
+		db.Create(&Employee{Age: 20, Namn: "Josefine", City: "Test"})
+	}
 
-	employees = append(employees, Employee{Id: 1, Age: 52, Namn: "Stefan", City: "Test"})
-	employees = append(employees, Employee{Id: 2, Age: 16, Namn: "Oliver", City: "Test"})
-	employees = append(employees, Employee{Id: 3, Age: 22, Namn: "Josefine", City: "Test"})
 }
