@@ -23,10 +23,23 @@ func GetAllEmployees() []Employee {
 	return employees
 }
 
-// func CreateNewEmployee(newEmployee Employee) {
-// 	employees = append(employees, newEmployee)
-// }
+func UpdateEmployee(employee Employee) bool {
+	var dbEmployee Employee
+	err := db.First(&dbEmployee, employee.Id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false
+	}
+	dbEmployee.Age = employee.Age
+	dbEmployee.Namn = employee.Namn
+	dbEmployee.City = employee.City
+	db.Save(&employee)
+	return true
+}
 
+func CreateNewEmployee(employee Employee) *Employee {
+	db.Create(&employee) // INSERT INTO EMPLOYEES (AGE, NAMN, CITY) VALUES (employee.Age, employee.Namn, employee.City)
+	return &employee
+}
 func GetEmployee(id int) *Employee { // GetEpmployee(2)
 	var employee Employee
 	err := db.First(&employee, id).Error

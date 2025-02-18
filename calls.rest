@@ -1,12 +1,32 @@
-### Get all
+### Get alls
 GET http://localhost:8080/api/employee
 
 
 ### Get existing single
-GET http://localhost:8080/api/employee/1
+GET http://localhost:8080/api/employee/5
 
 
 
 ### Get non-existing single
 GET http://localhost:8080/api/employee/1134324342
+
+
+### Skapa ny 
+POST http://localhost:8080/api/employee
+
+{
+    "age": 30,
+    "namn": "Lisa",
+    "city": "Uppsala"       
+}
+
+
+### Update existing
+PUT http://localhost:8080/api/employee/1
+
+{
+    "age": 40,
+    "namn": "Lisa2",
+    "city": "Uppsala2"       
+}
 
