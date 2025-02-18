@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -60,7 +61,22 @@ func handleStartPage(c *gin.Context) {
 	//c.String(http.StatusOK, "Hello World")
 }
 
+var config Config
+
 func main() {
+	// PÅ TORSDAG
+	// Jag vill köra Mysql
+	// eller sqlite men filemn - eomplyees.sqhej
+
+	// CONFIG -> flera lager med konfigurering
+	//    	config filer (vi kommer att skriva dom i YAML - application.properties,
+	//								settings-fil (JSON)
+	// 		environment-variabler (VIKTIGT FÖR CONTAINERS)
+	readConfig(&config)
+
+	fmt.Println("Värdet i database file")
+	fmt.Println(config.Database.File)
+
 	data.Init()
 
 	router := gin.Default()
@@ -72,6 +88,11 @@ func main() {
 	router.GET("/", handleStartPage)                      // READ
 	router.GET("/api/employee", handleGetAllEmployees)    // READ - sortera, filtrera, paginera
 	router.GET("/api/employee/:id", handleGetOneEmployee) // READ
+
+	// Delete gör vi sällan!!!
+	// OFTARE SOFT DELETE  - update product set active=false where id=12
+	// db.Delete(employee)
+
 	// UPDATE, DELETE, CREATE - dom går inte att testa/anropa via en webbläsare
 	router.POST("/api/employee", apiEmployeeAdd) // POSTA JSON för en Employee till /api/employee
 	router.PUT("/api/employee/:id", apiEmployeeUpdateById)
