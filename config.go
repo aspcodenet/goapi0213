@@ -36,6 +36,9 @@ func readConfig(cfg *Config) {
 	fmt.Printf("%+v", cfg)
 }
 
+// EX kör med RUNENVIRONMENT=Production
+// EX kör med RUNENVIRONMENT=Test
+// EX kör med RUNENVIRONMENT=Preproduction
 func readFile(cfg *Config) {
 	fileName := "config.yml"
 	s := os.Getenv("RUNENVIRONMENT")

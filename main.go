@@ -77,7 +77,12 @@ func main() {
 	fmt.Println("Värdet i database file")
 	fmt.Println(config.Database.File)
 
-	data.Init()
+	data.Init(config.Database.File,
+		config.Database.Server,
+		config.Database.Database,
+		config.Database.Username,
+		config.Database.Password,
+		config.Database.Port)
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/**")

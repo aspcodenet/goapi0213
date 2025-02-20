@@ -3,16 +3,16 @@
 # Database credentials
 database:
   # antingen denna
-  file: "" 
+  file: "database/sqlite" 
   # eller alla dessa (om file är blankt)
-  sql-user: "root"            #
-  sql-pass: "hejsan123"
+  sql-user: ""            #
+  sql-pass: ""
   sql-server: "127.0.0.1"
-  sql-database: "Employees"
+  sql-database: "SupportSystem"
   sql-port: 3306
 
 redis:
-  server: "localhost:6379"
+  server: "redis55:6379"
 
 sso:
   clientId:  "StudentPortal"
